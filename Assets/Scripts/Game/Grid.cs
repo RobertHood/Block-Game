@@ -63,8 +63,8 @@ public class Grid : MonoBehaviour
                 _row_moved = true;
             }
         
-            var pos_y_offset = _offset.x * _columnNumber + (_squareGapNumber.x * _squareGap);
-            var pos_x_offset = _offset.y * _rowNumber + (_squareGapNumber.y * _squareGap);
+            var pos_x_offset = _offset.x * _columnNumber + (_squareGapNumber.x * _squareGap);
+            var pos_y_offset = _offset.y * _rowNumber + (_squareGapNumber.y * _squareGap);
 
             if (_columnNumber > 0 && _columnNumber % 3 == 0)
             {
@@ -80,6 +80,8 @@ public class Grid : MonoBehaviour
             square.GetComponent<RectTransform>().anchoredPosition = new Vector2(_startPosition.x + pos_x_offset, _startPosition.y - pos_y_offset);
             
             square.GetComponent<RectTransform>().localPosition = new Vector3(_startPosition.x + pos_x_offset, _startPosition.y - pos_y_offset, 0.0f);
+
+            _columnNumber++;
         }
     }
 
