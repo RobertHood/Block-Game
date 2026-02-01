@@ -1,14 +1,26 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+
 
 public class ShapeSquare : MonoBehaviour
 {
     public Image occupiedImage;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         occupiedImage.gameObject.SetActive(false);
     }
 
-    // Update is called once per frame
+    public void DeactivateShape()
+    {
+        gameObject.GetComponent<BoxCollider2D>().enabled = false;
+        gameObject.SetActive(false);
+
+
+    }
+    public void ActivateShape()
+    {
+        gameObject.GetComponent<BoxCollider2D>().enabled = true;
+        gameObject.SetActive(true);
+    }
 }
