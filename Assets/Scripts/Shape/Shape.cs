@@ -171,7 +171,6 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
 
     private float GetYPositionForShapeSquare(ShapeData shapeData, int row, Vector2 moveDistance)
     {
-        // Center the shape vertically by calculating the offset from middle
         float centerY = (shapeData.row - 1) * moveDistance.y / 2f;
         float squareY = row * moveDistance.y;
         return squareY - centerY;
@@ -179,7 +178,6 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
 
     private float GetXPositionForShapeSquare(ShapeData shapeData, int column, Vector2 moveDistance)
     {
-        // Center the shape horizontally by calculating the offset from middle
         float centerX = (shapeData.column - 1) * moveDistance.x / 2f;
         float squareX = column * moveDistance.x;
         return squareX - centerX;
@@ -207,14 +205,12 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
         Debug.Log("OnDrag");
         _transform.anchoredPosition += eventData.delta / _canvas.scaleFactor;
 
-        // Reset highlights
         foreach (var square in _hitGridSquares)
         {
             square.Highlight(false);
         }
         _hitGridSquares.Clear();
 
-        // Check for overlaps
         foreach (var square in _currentShape)
         {
             if (!square.activeSelf) continue;
@@ -277,11 +273,13 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
             }
             else
             {
+                ClearAllHighlight();
                 GameEvents.MoveShapeToStartPosition();
             }
         }
         else
         {
+            ClearAllHighlight();
             GameEvents.MoveShapeToStartPosition();
         }
     }
@@ -294,5 +292,14 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     private void MoveShapeToStartPosition()
     {
         _transform.transform.localPosition = _startPosition;
+    }
+
+    private void ClearAllHighlight()
+    {
+        foreach (var s in _hitGridSquares)
+        {
+            s.Highlight(false);
+        }
+        _hitGridSquares.Clear();
     }
 }
