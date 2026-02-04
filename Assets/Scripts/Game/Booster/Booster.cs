@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Unity.IO.LowLevel.Unsafe;
 using Unity.VisualScripting;
@@ -8,7 +9,6 @@ public class Booster : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragH
 {
     protected Vector3 _startPosition;
     protected RectTransform _transform;
-
     protected Canvas _canvas;
     protected CanvasGroup _canvasGroup;
     protected virtual void Awake()
@@ -26,6 +26,7 @@ public class Booster : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragH
     public virtual void OnDrag(PointerEventData eventData)
     {
         _transform.anchoredPosition += eventData.delta / _canvas.scaleFactor;
+
     }
 
     public virtual void OnEndDrag(PointerEventData eventData)

@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 public class GridSquare : MonoBehaviour
 {
     public Image _hoverImage;
+    public Image _boosterHoverImage;
     public Image _activeImage;
     public Image _normalImage;
     public List<Sprite> _normalImages;
@@ -31,6 +32,12 @@ public class GridSquare : MonoBehaviour
     public void Highlight(bool enable)
     {
         _hoverImage.gameObject.SetActive(enable);
+        Selected = enable;
+    }
+
+    public void BoosterHighlight(bool enable)
+    {
+        _boosterHoverImage.gameObject.SetActive(enable);
         Selected = enable;
     }
 
