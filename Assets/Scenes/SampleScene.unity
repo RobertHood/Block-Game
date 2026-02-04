@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 220397365}
   - component: {fileID: 220397364}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -518,7 +518,7 @@ GameObject:
   - component: {fileID: 414109104}
   - component: {fileID: 414109103}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -657,6 +657,7 @@ GameObject:
   - component: {fileID: 506843161}
   - component: {fileID: 506843160}
   - component: {fileID: 506843162}
+  - component: {fileID: 506843163}
   m_Layer: 5
   m_Name: +1
   m_TagString: Untagged
@@ -734,6 +735,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &506843163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 506843158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0314a327a3141db48a2236c9c3cca0cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HelperTile
+  shapeData: {fileID: 11400000, guid: 2345a8d960040a94e8f657444cce59dc, type: 2}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1075,7 +1089,7 @@ GameObject:
   - component: {fileID: 980220072}
   - component: {fileID: 980220071}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1777,7 +1791,7 @@ GameObject:
   - component: {fileID: 1654115871}
   - component: {fileID: 1654115870}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

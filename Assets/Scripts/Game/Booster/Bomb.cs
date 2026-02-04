@@ -28,19 +28,28 @@ public class Bomb : Booster
                         squareSize = new Vector2(rect.rect.width, rect.rect.height) * centerSquare.transform.localScale;
                     }
                 }
-
+    
                 if (squareSize != Vector2.zero)
                 {
-                    Vector2 areaSize = squareSize * 2;
-                    Collider2D[] hits = Physics2D.OverlapBoxAll(centerSquare.transform.position, areaSize, 0f);
+                    Vector3[] positions = new Vector3[] 
+                    { 
+                        centerSquare.transform.position, //tâm
+                        centerSquare.transform.position + new Vector3(0, squareSize.y, 0), //ô bên trên center
+                        centerSquare.transform.position - new Vector3(0, squareSize.y, 0), //ô bên dưới center
+                        centerSquare.transform.position + new Vector3(squareSize.x, 0, 0), //ô bên phải center
+                        centerSquare.transform.position - new Vector3(squareSize.x, 0, 0)  //ô bên trái center
+                    };
 
-                    foreach (var h in hits)
-                    {
-                        GridSquare square = h.GetComponent<GridSquare>();
-                        if (square != null && square.SquareOccupied)
-                        {
-                            square.Deactivate();
-                        }
+                    foreach (var pos in positions) { 
+                        Collider2D neighbor = Physics2D.OverlapPoint(pos); 
+                        if (neighbor != null) { 
+                            GridSquare square = neighbor.GetComponent<GridSquare>(); 
+                            if (square != null && square.SquareOccupied) 
+                            { 
+                                square.Deactivate(); 
+                                Debug.Log("Bomb: " + pos); 
+                            } 
+                        } 
                     }
                 }
             }
