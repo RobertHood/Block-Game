@@ -45,8 +45,8 @@ public class Bomb : Booster
 
                     foreach (var pos in positions) { 
                         Collider2D neighbor = Physics2D.OverlapPoint(pos); 
-                        GridSquare square = neighbor.GetComponent<GridSquare>();
                         if (neighbor != null) { 
+                            GridSquare square = neighbor.GetComponent<GridSquare>();
                             square.BoosterHighlight(true);
                             _effectedGridSquares.Add(square);
                     }
@@ -117,6 +117,5 @@ public class Bomb : Booster
         {
             s.BoosterHighlight(false);
         }
-
     }
 }

@@ -118,7 +118,7 @@ public class _Grid : MonoBehaviour
 
         var currentSelectedShape = _shapeStorage.getCurrentSelectedShape();
         if (currentSelectedShape == null) return;
-
+        
         if (currentSelectedShape._totalSquareNumber == _squareIndexes.Count)
         {   
             foreach(var s in _squareIndexes)

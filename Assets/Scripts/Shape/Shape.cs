@@ -4,7 +4,7 @@ using NUnit.Framework.Constraints;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler
+public class Shape : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler
 {
     public GameObject squareShapeImage;
     public Vector3 _shapeSelectedScale;
@@ -30,6 +30,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
         _canvas = GetComponentInParent<Canvas>();
         _shapeDraggable = true;
         _shapeActive = true;
+        _transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
     }
 
     private void Start()
@@ -101,7 +102,9 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     public void RequestNewShape(ShapeData shapeData)
     {
         transform.localPosition = _startPosition;
+        transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
         CreateShape(shapeData);
+        
     }
     public void CreateShape(ShapeData shapeData)
     {
@@ -183,16 +186,6 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
         return squareX - centerX;
     }
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
-
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-
-    }
-
     public void OnBeginDrag(PointerEventData eventData)
     {
         Debug.Log("OnBeginDrag");
@@ -202,9 +195,9 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
 
     public void OnDrag(PointerEventData eventData)
     {
+        
         Debug.Log("OnDrag");
         _transform.anchoredPosition += eventData.delta / _canvas.scaleFactor;
-
         foreach (var square in _hitGridSquares)
         {
             square.Highlight(false);
@@ -239,11 +232,10 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
             var square = eventData.pointerEnter.GetComponentInParent<GridSquare>();
             if (square != null)
             {
-                // Convert mouse position to local space of the Shape
+
                 Vector2 localPoint;
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(_transform, eventData.position, _canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : _canvas.worldCamera, out localPoint);
 
-                // Find the square within the shape that is closest to the mouse pointer
                 GameObject closestSquare = null;
                 float minDistance = float.MaxValue;
 
@@ -259,7 +251,6 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
                     }
                 }
 
-                // Snap the shape so that the closest square aligns perfectly with the target GridSquare
                 if (closestSquare != null)
                 {
                     _transform.position = square.GetComponent<RectTransform>().position - _transform.TransformVector(closestSquare.GetComponent<RectTransform>().localPosition);
@@ -292,6 +283,8 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     private void MoveShapeToStartPosition()
     {
         _transform.transform.localPosition = _startPosition;
+        Rescale();
+        ClearAllHighlight();
     }
 
     private void ClearAllHighlight()
@@ -301,5 +294,10 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
             s.Highlight(false);
         }
         _hitGridSquares.Clear();
+    }
+
+    private void Rescale()
+    {
+        transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
     }
 }
