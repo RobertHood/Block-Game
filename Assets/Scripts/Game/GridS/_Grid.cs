@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime;
 using Unity.VisualScripting.FullSerializer.Internal;
@@ -173,6 +174,7 @@ public class _Grid : MonoBehaviour
 
         var completedLines = CheckIfSquaresAreCompleted(lines);
         Debug.Log(completedLines);
+        CheckIfPlayerLost();
     }
 
     private int CheckIfSquaresAreCompleted(List<int[]> data){
@@ -216,5 +218,118 @@ public class _Grid : MonoBehaviour
             }
         }
         return linesCompleted;
+        
+    }
+
+    private void CheckIfPlayerLost()
+    {
+        var validShape = 0;
+        for(var index = 0; index < _shapeStorage.shapeList.Count; index++)
+        {
+            var _isShapeActive = _shapeStorage.shapeList[index].IsAnyOfShapeSquareActive();
+            if (CheckIfShapeCanBePlacedOnBoard(_shapeStorage.shapeList[index]) && _isShapeActive)
+            {
+                // _shapeStorage.shapeList[index]?.ActivateShape();
+                validShape++;
+            }
+        }
+        Debug.Log($"valid shape number = {validShape}");
+        if (validShape == 0)
+        {
+            // GameEvents.PlayerLost(false);
+            Debug.Log("game over");
+        }
+    }
+
+    private bool CheckIfShapeCanBePlacedOnBoard(Shape currentShape)
+    {
+        var currentShapeData = currentShape.CurrentShapeData;
+        var shapeColumns = currentShapeData.column;
+        var shapeRows = currentShapeData.row;
+
+        List<int> originalShapeFilledUpSquares = new List<int>();
+        var squareIndex = 0;
+
+        for (var rowIndex = 0; rowIndex < shapeRows; rowIndex++)
+        {
+            for (var columnIndex = 0; columnIndex < shapeColumns; columnIndex++)
+            {
+                if (currentShapeData.board[rowIndex]._column[columnIndex])
+                {
+                    originalShapeFilledUpSquares.Add(squareIndex);
+                }
+                squareIndex++;
+            }
+        }
+
+        if (currentShape._totalSquareNumber != originalShapeFilledUpSquares.Count)
+        {
+            Debug.LogError($"Error in shape data - total square number {currentShape._totalSquareNumber} does not match the number of filled up squares {originalShapeFilledUpSquares.Count}");
+        }
+
+        var squareList = GetAllSquaresCombination(shapeColumns, shapeRows);
+
+        bool canBePlaced = false;
+
+        foreach(var number in squareList)
+        {
+            // Assume placement is possible for this offset until an occupied square is found
+            bool CanShapeBePlacedOnTheBoard = true;
+
+            foreach (var squareIndexToCheck in originalShapeFilledUpSquares)
+            {
+                var comp = _gridSquares[number[squareIndexToCheck]].GetComponent<GridSquare>();
+                if (comp.SquareOccupied)
+                {
+                    CanShapeBePlacedOnTheBoard = false;
+                    break;
+                }
+            }
+
+            if (CanShapeBePlacedOnTheBoard)
+            {
+                canBePlaced = true;
+                break;
+            }
+        }
+        return canBePlaced;
+    }
+
+    private List<int[]> GetAllSquaresCombination(int shapeColumns, int shapeRows)
+    {
+        var squareList = new List<int[]>();
+        var lastColumnIndex = 0;
+        var lastRowIndex = 0;
+
+        int safeIndex = 0;
+        while (lastRowIndex + shapeRows <= _rows)
+        {
+            var rowData = new List<int>();
+            for (var row = lastRowIndex; row < lastRowIndex + shapeRows; row++)
+            {
+                for (var column = lastColumnIndex; column < lastColumnIndex + shapeColumns; column++)
+                {
+                    rowData.Add(_lineIndicator.line_data[row, column]);
+                }
+            }
+
+            squareList.Add(rowData.ToArray());
+
+            lastColumnIndex++;
+
+            if (lastColumnIndex > _columns - shapeColumns)
+            {
+                lastColumnIndex = 0;
+                lastRowIndex++;
+            }
+
+            safeIndex++;
+            if (safeIndex > 1000)
+            {
+                Debug.LogError("Safe index limit reached in GetAllSquaresCombination");
+                break;
+            }
+        }
+        return squareList;
     }
 }

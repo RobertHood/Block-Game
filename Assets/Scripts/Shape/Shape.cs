@@ -195,28 +195,52 @@ public class Shape : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
     public void OnDrag(PointerEventData eventData)
     {
-        
         Debug.Log("OnDrag");
         _transform.anchoredPosition += eventData.delta / _canvas.scaleFactor;
-        foreach (var square in _hitGridSquares)
+
+        foreach (var sq in _hitGridSquares)
         {
-            square.Highlight(false);
+            sq.Highlight(false);
         }
         _hitGridSquares.Clear();
+        var matchedSquares = new List<GridSquare>();
+        int activeSquaresCount = 0;
+        bool canPlace = true;
 
         foreach (var square in _currentShape)
         {
             if (!square.activeSelf) continue;
+            activeSquaresCount++;
 
             var hits = Physics2D.OverlapPointAll(square.transform.position);
+            GridSquare found = null;
             foreach (var hit in hits)
             {
                 var gridSquare = hit.GetComponent<GridSquare>();
-                if (gridSquare != null && !gridSquare.SquareOccupied)
+                if (gridSquare != null && !gridSquare.SquareOccupied && !matchedSquares.Contains(gridSquare))
                 {
-                    gridSquare.Highlight(true);
-                    _hitGridSquares.Add(gridSquare);
+                    found = gridSquare;
+                    break;
                 }
+            }
+
+            if (found != null)
+            {
+                matchedSquares.Add(found);
+            }
+            else
+            {           
+                canPlace = false;
+                break;
+            }
+        }
+
+        if (canPlace && matchedSquares.Count == activeSquaresCount)
+        {
+            _hitGridSquares.AddRange(matchedSquares);
+            foreach (var gridSquare in _hitGridSquares)
+            {
+                gridSquare.Highlight(true);
             }
         }
     }
@@ -300,4 +324,6 @@ public class Shape : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     {
         transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
     }
+
+    
 }
